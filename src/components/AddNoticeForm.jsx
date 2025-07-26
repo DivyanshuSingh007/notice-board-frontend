@@ -48,7 +48,7 @@ export default function AddNoticeForm({ onSuccess }) {
     console.log("Sending form data:", formData); // Debug log
 
     try {
-      await API.post("/notice", formData);
+      await API.post("/notice/", formData);
       onSuccess();
       setForm({
         title: "",
