@@ -3,7 +3,6 @@ import axios from "axios";
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "https://web-production-0a9c.up.railway.app",
   headers: {
-    "Content-Type": "application/json",
     "Accept": "application/json",
   },
   withCredentials: true, // Include credentials in requests
