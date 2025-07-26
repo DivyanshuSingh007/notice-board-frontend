@@ -13,14 +13,10 @@ export default function LoginForm() {
     setError("");
 
     try {
-      const formData = new URLSearchParams();
+      const formData = new FormData();
       formData.append('email', email);
       formData.append('password', password);
-      const res = await API.post("/auth/login-json", formData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
+      const res = await API.post("/auth/login", formData);
 
       localStorage.setItem("token", res.data.access_token);
       navigate("/notices");
