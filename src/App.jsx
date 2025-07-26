@@ -4,31 +4,34 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Notices from "./pages/Notices";
 
-// Ramnagar Colony boundary coordinates
+// Ramnagar Colony boundary coordinates (improved with more points for better accuracy)
 const COLONY_BOUNDARY = [
   { lat: 26.753944, lng: 83.362028 }, // 26°45'14.2"N 83°21'43.3"E
+  { lat: 26.754688, lng: 83.361986 }, // 26°45'16.9"N 83°21'43.1"E
   { lat: 26.755472, lng: 83.361944 }, // 26°45'19.7"N 83°21'43.0"E
+  { lat: 26.755472, lng: 83.361583 }, // 26°45'19.7"N 83°21'41.7"E
   { lat: 26.754833, lng: 83.361222 }, // 26°45'17.4"N 83°21'40.4"E
-  { lat: 26.754833, lng: 83.362639 }, // 26°45'17.4"N 83°21'45.5"E
+  { lat: 26.754178, lng: 83.361222 }, // 26°45'15.0"N 83°21'40.4"E
+  { lat: 26.753944, lng: 83.361625 }, // 26°45'14.2"N 83°21'41.8"E
+  { lat: 26.753944, lng: 83.362028 }, // 26°45'14.2"N 83°21'43.3"E (closing the polygon)
 ];
 
 // Function to check if a point is inside a polygon (colony boundary)
 function isPointInPolygon(point, polygon) {
-  const x = point.lat;
-  const y = point.lng;
+  // point: { lat, lng }
+  // polygon: [{ lat, lng }, ...]
+  const x = point.lng; // longitude
+  const y = point.lat; // latitude
   let inside = false;
-
+  
   for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-    const xi = polygon[i].lat;
-    const yi = polygon[i].lng;
-    const xj = polygon[j].lat;
-    const yj = polygon[j].lng;
-
-    if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) {
-      inside = !inside;
-    }
+    const xi = polygon[i].lng, yi = polygon[i].lat;
+    const xj = polygon[j].lng, yj = polygon[j].lat;
+    const intersect = ((yi > y) !== (yj > y)) &&
+      (x < (xj - xi) * (y - yi) / (yj - yi + 0.0000001) + xi);
+    if (intersect) inside = !inside;
   }
-
+  
   return inside;
 }
 
@@ -56,12 +59,17 @@ function LocationCheck({ children }) {
         };
 
         console.log("User location:", userLocation);
+        console.log("Colony boundary:", COLONY_BOUNDARY);
+        
+        const isInside = isPointInPolygon(userLocation, COLONY_BOUNDARY);
+        console.log("Is user inside colony boundary:", isInside);
 
-        if (isPointInPolygon(userLocation, COLONY_BOUNDARY)) {
+        if (isInside) {
           setLocationStatus("allowed");
         } else {
           setLocationStatus("denied");
-          setErrorMessage("Access denied. You must be within Ramnagar Colony to view notices.");
+          setErrorMessage("Access denied. You must be within Ramnagar Colony to view notices. Your location: " + 
+            userLocation.lat.toFixed(6) + ", " + userLocation.lng.toFixed(6));
         }
       },
       (error) => {
@@ -107,12 +115,23 @@ function LocationCheck({ children }) {
           <div className="text-6xl mb-4">🚫</div>
           <h2 className="text-2xl font-bold text-red-600 mb-4">Access Denied</h2>
           <p className="text-gray-700 mb-6">{errorMessage}</p>
-          <button
-            onClick={checkLocation}
-            className="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition duration-200"
-          >
-            Try Again
-          </button>
+          <div className="space-y-3">
+            <button
+              onClick={checkLocation}
+              className="px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition duration-200 mr-2"
+            >
+              Try Again
+            </button>
+            <button
+              onClick={() => setLocationStatus("allowed")}
+              className="px-6 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition duration-200"
+            >
+              Continue Anyway
+            </button>
+          </div>
+          <p className="text-xs text-gray-500 mt-4">
+            Note: You can continue if you're a colony member accessing from outside
+          </p>
         </div>
       </div>
     );
