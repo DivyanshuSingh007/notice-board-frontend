@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API from "../api";
+import API, { clearLocationCache } from "../api";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
@@ -20,10 +20,16 @@ export default function LoginForm() {
 
       localStorage.setItem("token", res.data.access_token);
       navigate("/notices");
-    } catch {
-      setError("Invalid email or password");
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError("Invalid email or password");
+      }
     }
   };
+
+  // Optionally clear location cache on logout (if you have a logout button elsewhere, use clearLocationCache())
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

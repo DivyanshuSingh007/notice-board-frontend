@@ -1,5 +1,9 @@
 import axios from "axios";
 
+export function clearLocationCache() {
+  localStorage.removeItem("locationAllowed");
+}
+
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "https://web-production-0a9c.up.railway.app",
   headers: {
@@ -25,10 +29,14 @@ API.interceptors.response.use((response) => {
 }, (error) => {
   console.error("API Error:", error);
   if (error.response?.status === 401) {
-    // Unauthorized - clear token and redirect to login
+    // Unauthorized - clear token and redirect to login if not already there
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    clearLocationCache();
+    if (window.location.pathname !== "/login") {
+      window.location.href = "/login";
+    }
   }
+  // For other errors, do not reload or redirect
   return Promise.reject(error);
 });
 
