@@ -54,71 +54,112 @@ export default function NoticeCard({ notice, isAdmin, onDelete }) {
     }
   };
 
+  // Notice types that need event date/time (same as AddNoticeForm)
+  const needsEventTime = ["Meeting", "Event", "Service"];
+
   if (isEditing) {
     return (
       <form onSubmit={handleEditSubmit} className="bg-white p-4 rounded-xl shadow-md">
-        <input
-          type="text"
-          name="title"
-          value={editForm.title}
-          onChange={handleEditChange}
-          className="mb-2 w-full px-2 py-1 border rounded"
-          required
-        />
-        <textarea
-          name="description"
-          value={editForm.description}
-          onChange={handleEditChange}
-          className="mb-2 w-full px-2 py-1 border rounded"
-          required
-        />
-        <input
-          type="date"
-          name="event_date"
-          value={editForm.event_date}
-          onChange={handleEditChange}
-          className="mb-2 w-full px-2 py-1 border rounded"
-          required
-        />
-        <input
-          type="time"
-          name="event_start_time"
-          value={editForm.event_start_time}
-          onChange={handleEditChange}
-          className="mb-2 w-full px-2 py-1 border rounded"
-          required
-        />
-        <input
-          type="time"
-          name="event_end_time"
-          value={editForm.event_end_time}
-          onChange={handleEditChange}
-          className="mb-2 w-full px-2 py-1 border rounded"
-          required
-        />
-        <select
-          name="type"
-          value={editForm.type}
-          onChange={handleEditChange}
-          className="mb-2 w-full px-2 py-1 border rounded"
-          required
-        >
-          <option value="Maintenance">Maintenance</option>
-          <option value="Rent/Sell">Rent/Sell</option>
-          <option value="Meeting">Meeting</option>
-          <option value="Event">Event</option>
-          <option value="Lost & Found">Lost & Found</option>
-          <option value="General Announcement">General Announcement</option>
-          <option value="Security Alert">Security Alert</option>
-          <option value="Visitor Information">Visitor Information</option>
-          <option value="Payment Reminder">Payment Reminder</option>
-          <option value="Service">Service</option>
-          <option value="Emergency">Emergency</option>
-          <option value="Other">Other</option>
-        </select>
-        <div className="flex gap-2">
-          <button type="submit" className="px-3 py-1 bg-blue-600 text-white rounded">Save</button>
-          <button type="button" className="px-3 py-1 bg-gray-400 text-white rounded" onClick={() => setIsEditing(false)}>Cancel</button>
+        <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
+          {/* Title */}
+          <div>
+            <label htmlFor="title" className="block mb-1 text-sm font-medium text-gray-700">Title</label>
+            <input
+              id="title"
+              type="text"
+              name="title"
+              value={editForm.title}
+              onChange={handleEditChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          {/* Description */}
+          <div>
+            <label htmlFor="description" className="block mb-1 text-sm font-medium text-gray-700">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              value={editForm.description}
+              onChange={handleEditChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              required
+            />
+          </div>
+          {/* Notice Type */}
+          <div>
+            <label htmlFor="type" className="block mb-1 text-sm font-medium text-gray-700">Notice Type</label>
+            <select
+              id="type"
+              name="type"
+              value={editForm.type}
+              onChange={handleEditChange}
+              className="w-full px-3 py-2 border rounded-lg"
+              required
+            >
+              <option value="Maintenance">Maintenance</option>
+              <option value="Rent/Sell">Rent/Sell</option>
+              <option value="Meeting">Meeting</option>
+              <option value="Event">Event</option>
+              <option value="Lost & Found">Lost & Found</option>
+              <option value="General Announcement">General Announcement</option>
+              <option value="Security Alert">Security Alert</option>
+              <option value="Visitor Information">Visitor Information</option>
+              <option value="Payment Reminder">Payment Reminder</option>
+              <option value="Service">Service</option>
+              <option value="Emergency">Emergency</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          {/* Event Date - only show for types that need it */}
+          {needsEventTime.includes(editForm.type) && (
+            <div>
+              <label htmlFor="event_date" className="block mb-1 text-sm font-medium text-gray-700">Event Date</label>
+              <input
+                id="event_date"
+                type="date"
+                name="event_date"
+                value={editForm.event_date}
+                onChange={handleEditChange}
+                className="w-full px-3 py-2 border rounded-lg"
+                required
+              />
+            </div>
+          )}
+          {/* Event Start Time - only show for types that need it */}
+          {needsEventTime.includes(editForm.type) && (
+            <div>
+              <label htmlFor="event_start_time" className="block mb-1 text-sm font-medium text-gray-700">Start Time</label>
+              <input
+                id="event_start_time"
+                type="time"
+                name="event_start_time"
+                value={editForm.event_start_time}
+                onChange={handleEditChange}
+                className="w-full px-3 py-2 border rounded-lg"
+                required
+              />
+            </div>
+          )}
+          {/* Event End Time - only show for types that need it */}
+          {needsEventTime.includes(editForm.type) && (
+            <div>
+              <label htmlFor="event_end_time" className="block mb-1 text-sm font-medium text-gray-700">End Time</label>
+              <input
+                id="event_end_time"
+                type="time"
+                name="event_end_time"
+                value={editForm.event_end_time}
+                onChange={handleEditChange}
+                className="w-full px-3 py-2 border rounded-lg"
+                required
+              />
+            </div>
+          )}
+        </div>
+        <div className="flex gap-2 mt-4">
+          <button type="submit" className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">Save</button>
+          <button type="button" className="px-4 py-2 bg-gray-400 hover:bg-gray-500 text-white rounded-lg" onClick={() => setIsEditing(false)}>Cancel</button>
         </div>
       </form>
     );
