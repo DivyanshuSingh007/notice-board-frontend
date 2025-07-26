@@ -16,7 +16,7 @@ export default function LoginForm() {
       const formData = new URLSearchParams();
       formData.append('email', email);
       formData.append('password', password);
-      const res = await API.post("/auth/login", formData, {
+      const res = await API.post("/auth/login-json", formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
