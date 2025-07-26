@@ -33,7 +33,7 @@ export default function NoticeCard({ notice, isAdmin, onDelete }) {
         noticeData.event_end_time = editForm.event_end_time;
       }
       
-      await API.put(`/notice/${notice.id}/`, noticeData);
+      await API.put(`/notices/${notice.id}/`, noticeData);
       setIsEditing(false);
       window.location.reload(); // Or call a prop to refresh notices
     } catch (error) {
@@ -45,7 +45,7 @@ export default function NoticeCard({ notice, isAdmin, onDelete }) {
   const handleDelete = async () => {
     if (window.confirm("Delete this notice?")) {
       try {
-        await API.delete(`/notice/${notice.id}/`);
+        await API.delete(`/notices/${notice.id}/`);
         onDelete();
       } catch (error) {
         console.error("Failed to delete notice:", error);
