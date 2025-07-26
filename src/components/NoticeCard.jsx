@@ -15,28 +15,30 @@ export default function NoticeCard({ notice, isAdmin, onDelete }) {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Create FormData instead of JSON object
-      const formData = new FormData();
-      formData.append('title', editForm.title);
-      formData.append('description', editForm.description);
-      formData.append('type', editForm.type);
+      // Build the notice object (JSON instead of FormData)
+      const noticeData = {
+        title: editForm.title,
+        description: editForm.description,
+        type: editForm.type,
+      };
       
       // Add event fields if they exist
       if (editForm.event_date) {
-        formData.append('event_date', editForm.event_date);
+        noticeData.event_date = editForm.event_date;
       }
       if (editForm.event_start_time) {
-        formData.append('event_start_time', editForm.event_start_time);
+        noticeData.event_start_time = editForm.event_start_time;
       }
       if (editForm.event_end_time) {
-        formData.append('event_end_time', editForm.event_end_time);
+        noticeData.event_end_time = editForm.event_end_time;
       }
       
-      await API.put(`/notice/${notice.id}/`, formData);
+      await API.put(`/notice/${notice.id}/`, noticeData);
       setIsEditing(false);
       window.location.reload(); // Or call a prop to refresh notices
-    } catch {
-      alert("Failed to update notice");
+    } catch (error) {
+      console.error("Failed to update notice:", error);
+      alert(`Failed to update notice: ${error.response?.data?.detail || error.message || 'Unknown error'}`);
     }
   };
 
@@ -45,8 +47,9 @@ export default function NoticeCard({ notice, isAdmin, onDelete }) {
       try {
         await API.delete(`/notice/${notice.id}/`);
         onDelete();
-      } catch {
-        alert("Failed to delete notice");
+      } catch (error) {
+        console.error("Failed to delete notice:", error);
+        alert(`Failed to delete notice: ${error.response?.data?.detail || error.message || 'Unknown error'}`);
       }
     }
   };
