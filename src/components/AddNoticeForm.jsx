@@ -21,12 +21,6 @@ export default function AddNoticeForm({ onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Create FormData instead of JSON object
-    const formData = new FormData();
-    formData.append('title', form.title);
-    formData.append('description', form.description);
-    formData.append('type', form.type);
 
     // Always send post_date as today if not set
     let postDate = form.post_date;
@@ -34,28 +28,32 @@ export default function AddNoticeForm({ onSuccess }) {
       const today = new Date();
       postDate = today.toISOString().slice(0, 10); // YYYY-MM-DD
     }
-    formData.append('post_date', postDate);
+
+    // Build the notice object
+    const noticeData = {
+      title: form.title,
+      description: form.description,
+      post_date: postDate,
+      type: form.type,
+    };
 
     // Only add event fields if they have values and the notice type needs them
     if (needsEventTime.includes(form.type)) {
-      // Only add date if it's not empty
       if (form.event_date && form.event_date.trim() !== '') {
-        formData.append('event_date', form.event_date);
+        noticeData.event_date = form.event_date;
       }
-      // Only add start time if it's not empty
       if (form.event_start_time && form.event_start_time.trim() !== '') {
-        formData.append('event_start_time', form.event_start_time);
+        noticeData.event_start_time = form.event_start_time;
       }
-      // Only add end time if it's not empty
       if (form.event_end_time && form.event_end_time.trim() !== '') {
-        formData.append('event_end_time', form.event_end_time);
+        noticeData.event_end_time = form.event_end_time;
       }
     }
 
-    console.log("Sending form data:", Object.fromEntries(formData)); // Debug log
+    console.log("Sending notice data:", noticeData); // Debug log
 
     try {
-      await API.post("/notice/", formData);
+      await API.post("/notice/", noticeData);
       onSuccess();
       setForm({
         title: "",
@@ -68,7 +66,7 @@ export default function AddNoticeForm({ onSuccess }) {
       });
     } catch (error) {
       console.error("Failed to add notice:", error);
-      console.error("Request data:", Object.fromEntries(formData));
+      console.error("Request data:", noticeData);
       console.error("Response:", error.response?.data);
       console.error("Status:", error.response?.status);
       let errorMsg = 'Unknown error';
