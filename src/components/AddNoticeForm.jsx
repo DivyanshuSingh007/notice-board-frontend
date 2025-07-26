@@ -22,30 +22,29 @@ export default function AddNoticeForm({ onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Create a clean form data object, excluding empty optional fields
-    const formData = {
-      title: form.title,
-      description: form.description,
-      type: form.type,
-    };
+    // Create FormData instead of JSON object
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('description', form.description);
+    formData.append('type', form.type);
 
     // Only add event fields if they have values and the notice type needs them
     if (needsEventTime.includes(form.type)) {
       // Only add date if it's not empty
       if (form.event_date && form.event_date.trim() !== '') {
-        formData.event_date = form.event_date;
+        formData.append('event_date', form.event_date);
       }
       // Only add start time if it's not empty
       if (form.event_start_time && form.event_start_time.trim() !== '') {
-        formData.event_start_time = form.event_start_time;
+        formData.append('event_start_time', form.event_start_time);
       }
       // Only add end time if it's not empty
       if (form.event_end_time && form.event_end_time.trim() !== '') {
-        formData.event_end_time = form.event_end_time;
+        formData.append('event_end_time', form.event_end_time);
       }
     }
 
-    console.log("Sending form data:", formData); // Debug log
+    console.log("Sending form data:", Object.fromEntries(formData)); // Debug log
 
     try {
       await API.post("/notice/", formData);
@@ -61,7 +60,7 @@ export default function AddNoticeForm({ onSuccess }) {
       });
     } catch (error) {
       console.error("Failed to add notice:", error);
-      console.error("Request data:", formData);
+      console.error("Request data:", Object.fromEntries(formData));
       console.error("Response:", error.response?.data);
       console.error("Status:", error.response?.status);
       alert(`Failed to add notice: ${error.response?.data?.detail || error.message || 'Unknown error'}`);

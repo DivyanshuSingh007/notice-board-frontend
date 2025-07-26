@@ -15,7 +15,24 @@ export default function NoticeCard({ notice, isAdmin, onDelete }) {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await API.put(`/notice/${notice.id}`, editForm);
+      // Create FormData instead of JSON object
+      const formData = new FormData();
+      formData.append('title', editForm.title);
+      formData.append('description', editForm.description);
+      formData.append('type', editForm.type);
+      
+      // Add event fields if they exist
+      if (editForm.event_date) {
+        formData.append('event_date', editForm.event_date);
+      }
+      if (editForm.event_start_time) {
+        formData.append('event_start_time', editForm.event_start_time);
+      }
+      if (editForm.event_end_time) {
+        formData.append('event_end_time', editForm.event_end_time);
+      }
+      
+      await API.put(`/notice/${notice.id}`, formData);
       setIsEditing(false);
       window.location.reload(); // Or call a prop to refresh notices
     } catch {
