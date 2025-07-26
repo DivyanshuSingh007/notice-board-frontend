@@ -41,6 +41,10 @@ function LocationCheck({ children }) {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
+    if (localStorage.getItem("locationAllowed") === "true") {
+      setLocationStatus("allowed");
+      return;
+    }
     checkLocation();
   }, []);
 
@@ -66,6 +70,7 @@ function LocationCheck({ children }) {
 
         if (isInside) {
           setLocationStatus("allowed");
+          localStorage.setItem("locationAllowed", "true");
         } else {
           setLocationStatus("denied");
           setErrorMessage("Access denied. You must be within Ramnagar Colony to view notices. Your location: " + 
@@ -123,7 +128,10 @@ function LocationCheck({ children }) {
               Try Again
             </button>
             <button
-              onClick={() => setLocationStatus("allowed")}
+              onClick={() => {
+                setLocationStatus("allowed");
+                localStorage.setItem("locationAllowed", "true");
+              }}
               className="px-6 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition duration-200"
             >
               Continue Anyway
