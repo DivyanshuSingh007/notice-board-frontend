@@ -16,7 +16,7 @@ export default function Notices() {
       const user = await API.get("/auth/me");
       setIsAdmin(user.data.admin);
 
-      const res = await API.get("/notice");
+      const res = await API.get("/notice/");
       setNotices(res.data);
     } catch (err) {
       console.error("Error fetching notices", err);

@@ -32,7 +32,7 @@ export default function NoticeCard({ notice, isAdmin, onDelete }) {
         formData.append('event_end_time', editForm.event_end_time);
       }
       
-      await API.put(`/notice/${notice.id}`, formData);
+      await API.put(`/notice/${notice.id}/`, formData);
       setIsEditing(false);
       window.location.reload(); // Or call a prop to refresh notices
     } catch {
@@ -43,7 +43,7 @@ export default function NoticeCard({ notice, isAdmin, onDelete }) {
   const handleDelete = async () => {
     if (window.confirm("Delete this notice?")) {
       try {
-        await API.delete(`/notice/${notice.id}`);
+        await API.delete(`/notice/${notice.id}/`);
         onDelete();
       } catch {
         alert("Failed to delete notice");
