@@ -28,6 +28,14 @@ export default function AddNoticeForm({ onSuccess }) {
     formData.append('description', form.description);
     formData.append('type', form.type);
 
+    // Always send post_date as today if not set
+    let postDate = form.post_date;
+    if (!postDate || postDate.trim() === "") {
+      const today = new Date();
+      postDate = today.toISOString().slice(0, 10); // YYYY-MM-DD
+    }
+    formData.append('post_date', postDate);
+
     // Only add event fields if they have values and the notice type needs them
     if (needsEventTime.includes(form.type)) {
       // Only add date if it's not empty
@@ -63,7 +71,15 @@ export default function AddNoticeForm({ onSuccess }) {
       console.error("Request data:", Object.fromEntries(formData));
       console.error("Response:", error.response?.data);
       console.error("Status:", error.response?.status);
-      alert(`Failed to add notice: ${error.response?.data?.detail || error.message || 'Unknown error'}`);
+      let errorMsg = 'Unknown error';
+      if (error.response?.data?.detail) {
+        errorMsg = error.response.data.detail;
+      } else if (error.message) {
+        errorMsg = error.message;
+      } else {
+        errorMsg = JSON.stringify(error);
+      }
+      alert(`Failed to add notice: ${errorMsg}`);
     }
   };
 
