@@ -5,7 +5,7 @@
 2. Get your Railway backend URL
 
 ## Step 1: Update Backend URL
-Replace `your-railway-backend-url.railway.app` in `src/api.js` with your actual Railway URL.
+Replace `your-railway-backend-url.railway.app` in `src/api.js` with your actual Render URL.
 
 ## Step 2: Install Dependencies
 ```bash

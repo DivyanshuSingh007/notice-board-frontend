@@ -49,7 +49,7 @@ A modern React-based frontend for the Notice Board application with user authent
 Create a `.env` file in the root directory:
 
 ```env
-VITE_API_URL=https://web-production-9bb32.up.railway.app
+VITE_API_URL=https://notice-board-backend-7z2k.onrender.com
 ```
 
 ## Deployment

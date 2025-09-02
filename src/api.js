@@ -5,7 +5,7 @@ export function clearLocationCache() {
 }
 
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "https://web-production-0a9c.up.railway.app",
+  baseURL: import.meta.env.VITE_API_URL || "https://notice-board-backend-7z2k.onrender.com",
   headers: {
     "Accept": "application/json",
   },
