@@ -4,6 +4,10 @@ export function clearLocationCache() {
   localStorage.removeItem("locationAllowed");
 }
 
+// Debug: Log the environment variable
+console.log("VITE_API_URL from env:", import.meta.env.VITE_API_URL);
+console.log("Fallback URL:", "https://notice-board-backend-7z2k.onrender.com");
+
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "https://notice-board-backend-7z2k.onrender.com",
   headers: {
@@ -11,6 +15,9 @@ const API = axios.create({
   },
   withCredentials: true, // Include credentials in requests
 });
+
+// Debug: Log the final baseURL
+console.log("Final API baseURL:", API.defaults.baseURL);
 
 // Request interceptor
 API.interceptors.request.use((req) => {

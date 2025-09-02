@@ -1,0 +1,3 @@
+[33m491063f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m Update backend URL from Railway to Render deployment
+[33mb5b0321[m[33m ([m[1;31morigin/master[m[33m)[m Improve edit form: Add conditional event fields and better styling to match AddNoticeForm
+[33mabd5451[m Fix all notice endpoints to use /notice/{notice_id} format without trailing slashes
