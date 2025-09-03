@@ -18,10 +18,8 @@ export default function LoginForm() {
         withCredentials: API.defaults.withCredentials,
         headers: API.defaults.headers,
       });
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
-      const res = await API.post("/auth/login", formData);
+      const payload = { email, password };
+      const res = await API.post("/auth/login", payload);
 
       localStorage.setItem("token", res.data.access_token);
       navigate("/notices");
