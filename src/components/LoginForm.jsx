@@ -13,6 +13,11 @@ export default function LoginForm() {
     setError("");
 
     try {
+      console.log("[Login] API config:", {
+        baseURL: API.defaults.baseURL,
+        withCredentials: API.defaults.withCredentials,
+        headers: API.defaults.headers,
+      });
       const formData = new FormData();
       formData.append('email', email);
       formData.append('password', password);
@@ -21,6 +26,7 @@ export default function LoginForm() {
       localStorage.setItem("token", res.data.access_token);
       navigate("/notices");
     } catch (err) {
+      console.error("[Login] Axios error:", err);
       if (err.response && err.response.data && err.response.data.detail) {
         setError(err.response.data.detail);
       } else {
