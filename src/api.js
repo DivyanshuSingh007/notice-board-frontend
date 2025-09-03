@@ -13,7 +13,8 @@ const API = axios.create({
   headers: {
     "Accept": "application/json",
   },
-  withCredentials: true, // Include credentials in requests
+  // Use Authorization bearer tokens instead of cross-site cookies to avoid strict CORS
+  withCredentials: false,
 });
 
 // Debug: Log the final baseURL
@@ -24,6 +25,19 @@ API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   if (token) {
     req.headers.Authorization = `Bearer ${token}`;
+  }
+
+  // If sending FormData, let the browser set the correct multipart boundary
+  if (typeof FormData !== "undefined" && req.data instanceof FormData) {
+    if (req.headers && req.headers["Content-Type"]) {
+      delete req.headers["Content-Type"];
+    }
+  } else {
+    // For JSON payloads on write methods, ensure Content-Type is application/json
+    const method = (req.method || "").toLowerCase();
+    if (["post", "put", "patch"].includes(method)) {
+      req.headers["Content-Type"] = "application/json";
+    }
   }
   return req;
 }, (error) => {
